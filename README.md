@@ -108,10 +108,24 @@ The column 'DEMAND.LOSS.MW' is likely NMAR (Not Missing at Random) because the v
 
 We tested whether the missingness of 'CUSTOMERS.AFFECTED' depends on other columns, using permutation tests.
 
-*Test 1:* The missingness of 'CUSTOMERS.AFFECTED' **does depend on** 'CAUSE.CATEGORY' (p < 0.001). Intuitively, this makes sense, because certain variants of outages (like intentional griefing/attacks), are far less likely to have customer counts reported. 
+**Test 1:** The missingness of 'CUSTOMERS.AFFECTED' *does depend on* 'CAUSE.CATEGORY' (p < 0.001). Intuitively, this makes sense, because certain variants of outages (like intentional griefing/attacks), are far less likely to have customer counts reported or not.
 
 <iframe src="assets/fig_miss1.html" width="800" height="400" frameborder="0"></iframe>
 
-*Test 2:* The missingness of 'CUSTOMERS.AFFECTED' **does not depend on** 'PC.REALGSP.CHANGE' (p ≈ 0.600). The year-over-year change in a state's GDP has no logical conenction to whether customer counts are reported. 
+**Test 2:** The missingness of 'CUSTOMERS.AFFECTED' *does not depend on* 'PC.REALGSP.CHANGE' (p ≈ 0.600). The year-over-year change in a state's GDP has no logical conenction to whether customer counts are reported. 
 
 <iframe src="assets/fig_miss2.html" width="800" height="400" frameborder="0"></iframe>
+
+## Hypothesis Testing
+
+**Null Hypothesis:** Outage duration is the same for high density and low density population states. Any observed difference is due to random chance alone. 
+
+**Alternative Hypothesis:** High density states have shorter outage durations than low density states. 
+
+**Test Statistic:** Difference in means (Low Density - High Density)
+
+**Significance Level:** 0.05
+
+We performed a permutation test with 10,000 permutations and obtained a p-value of approximately 0.065. At the 0.05 significance level, we *fail to reject the null hypothesis*. While high density areas do appear to have slightyly shorter outage durations, the difference is not statistically significant enough to rule out random chance. 
+
+<iframe src="assets/fig_hyp.html" width="800" height="400" frameborder="0"></iframe>
