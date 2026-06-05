@@ -1,6 +1,8 @@
 # Power Outages and Population Density
 **By Connor Day**
 
+<br>
+
 ## Introduction
 
 This dataset contains major power outage events in the continental United States, ranging from January 2000 to July 2016, which contains 1,534 rows and 56 columns which cover outage details, geographical information, climate data, electricity consumption, economic characteristics, and land-use features.
