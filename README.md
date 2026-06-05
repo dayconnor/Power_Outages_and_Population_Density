@@ -76,13 +76,13 @@ A preview of the cleaned DataFrame:
 
 The distribution of outage durations is heavily right-skewed, with most of the outages lasting under 5,000 minutes, with some extreme outliers exceeding 100,000 minutes. 
 
-<iframe src="assets/plot1.html" width="800" height="600" frameborder="0"></iframe>
+<iframe src="assets/plot1.html" width="800" height="400" frameborder="0"></iframe>
 
 **Bivariate Analysis:**
 
 Comparing outage durations across density groups, high density states appear to have slightly shorter outage durations, but both groups show a significant spread in their respective outage durations.
 
-<iframe src"assets/plot3_zoom.html" width="800" height="600" frameborder="0"></iframe>
+<iframe src="assets/plot3_zoom.html" width="800" height="400" frameborder="0"></iframe>
 
 **Interesting Aggregates:**
 
@@ -110,8 +110,8 @@ We tested whether the missingness of 'CUSTOMERS.AFFECTED' depends on other colum
 
 *Test 1:* The missingness of 'CUSTOMERS.AFFECTED' **does depend on** 'CAUSE.CATEGORY' (p < 0.001). Intuitively, this makes sense, because certain variants of outages (like intentional griefing/attacks), are far less likely to have customer counts reported. 
 
-<iframe src="assets/fig_miss1.html" width="800" height="600" frameborder="0"></iframe>
+<iframe src="assets/fig_miss1.html" width="800" height="400" frameborder="0"></iframe>
 
 *Test 2:* The missingness of 'CUSTOMERS.AFFECTED' **does not depend on** 'PC.REALGSP.CHANGE' (p ≈ 0.600). The year-over-year change in a state's GDP has no logical conenction to whether customer counts are reported. 
 
-<iframe src="assets/fig_miss2.html" width="800" height="600" frameborder="0"></iframe>
+<iframe src="assets/fig_miss2.html" width="800" height="400" frameborder="0"></iframe>
