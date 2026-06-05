@@ -53,3 +53,26 @@ This question matters because the relationship between power outage durations an
     </tr>
   </tbody>
 </table>
+
+## Data Cleaning and Exploratory Data Analysis
+
+**Cleaning Steps:**
+- Combined 'OUTAGE.START.DATE' and 'OUTAGE.START.TIME' into a single 'OUTAGE.START' timestamp column, doing the same for 'OUTAGE.RESTORATION'. This makes it easier to work with outage times as one single variable, rather than having separate, unnecessary date and time columns. 
+- Dropped the priginal four date and time columns since they became redundant after combining them. 
+- Created a 'DENSITY_GROUP' column by categorizing states into "High Density" and "Low Density" based on the median urban population density (2,380 persons per square mile). This allows a direct comparison between the two groups, which is key for our research question.
+
+A preview of the cleaned DataFrame:
+FILL IN THE OUTPUT OF print(df.head().to_markdown())` HERE
+
+**Univariate Analysis:**
+
+The distribution of outage durations is heavily right-skewed, with most of the outages lasting under 5,000 minutes, with some extreme outliers exceeding 100,000 minutes. 
+
+<iframe src> 
+
+**Bivariate Analysis:**
+
+Comparing outage durations across density groups, high density states appear to have slightly shorter outage durations, but both groups show a significant spread in their respective outage durations.
+
+<iframe src>
+
