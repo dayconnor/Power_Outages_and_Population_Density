@@ -54,6 +54,8 @@ This question matters because the relationship between power outage durations an
   </tbody>
 </table>
 
+<br>
+
 ## Data Cleaning and Exploratory Data Analysis
 
 **Cleaning Steps:**
@@ -98,6 +100,8 @@ Comparing outage durations across density groups, high density states appear to 
 | system operability disruption |          552.7 |        1045.2 |
 </pre>
 
+<br>
+
 ## Assessment of Missingness
 
 **NMAR Analysis:**
@@ -116,6 +120,8 @@ We tested whether the missingness of 'CUSTOMERS.AFFECTED' depends on other colum
 
 <iframe src="assets/fig_miss2.html" width="800" height="450" frameborder="0"></iframe>
 
+<br>
+
 ## Hypothesis Testing
 
 **Null Hypothesis:** Outage duration is the same for high density and low density population states. Any observed difference is due to random chance alone. 
@@ -130,6 +136,8 @@ We performed a permutation test with 10,000 permutations and obtained a p-value 
 
 <iframe src="assets/fig_hyp.html" width="800" height="450" frameborder="0"></iframe>
 
+<br>
+
 ## Framing a Prediction Problem
 
 **Prediction Problem:** Predict the duration of a major power outage (in minutes) based on information available at the start of the outage. 
@@ -142,6 +150,8 @@ We performed a permutation test with 10,000 permutations and obtained a p-value 
 
 **Time of Prediction:** At the start of an outage, we would know the location (e.g. state, region, population density), the cause category, and the time of year. We would not know 'OUTAGE.RESTORATION', 'CUSTOMERS.AFFECTED', or 'DEMAND.LOSS.MW'. 
 
+<br>
+
 ## Baseline Model
 
 Our baseline model is a *Decision Tree Regressor* predicting 'OUTAGE.DURATION' using two features: 
@@ -151,6 +161,8 @@ Our baseline model is a *Decision Tree Regressor* predicting 'OUTAGE.DURATION' u
 Both transformations are implemented in a single sklearn Pipeline. The model achieved a test RMSE of 7418.97 minutes compared to a mean-only baseline of 7838.99 minutes, an improvement of 420.02 minutes. 
 
 This baseline model's test RMSE 7418.97 minutes showed little improvement over the mean-only baseline of 7838.99, suggesting that the population density and cause category do provide a predictive value for outage duration. However, since the error value is still large, relative to the average outage duration, two features alone are not necessarily sufficient in accurately predicting outage duration, leading us to a final model consisting of more features.
+
+<br>
 
 ## Final Model 
 
@@ -170,6 +182,8 @@ We switched to a *Random Forest Regressor* and used *GridSearchCV* with 5-fold c
 - Baseline Test RMSE: 7418.97 minutes
 - Final Model Test RMSE: 6888.27 minutes
 - Improvement: 530.70 minutes
+
+<br>
 
 ## Fairness Analysis
 
