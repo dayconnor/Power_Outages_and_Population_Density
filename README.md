@@ -76,13 +76,13 @@ A preview of the cleaned DataFrame:
 
 The distribution of outage durations is heavily right-skewed, with most of the outages lasting under 5,000 minutes, with some extreme outliers exceeding 100,000 minutes. 
 
-<iframe src="assets/plot1.html" width="800" height="475" frameborder="0"></iframe>
+<iframe src="assets/plot1.html" width="800" height="450" frameborder="0"></iframe>
 
 **Bivariate Analysis:**
 
 Comparing outage durations across density groups, high density states appear to have slightly shorter outage durations, but both groups show a significant spread in their respective outage durations.
 
-<iframe src="assets/plot3_zoom.html" width="800" height="475" frameborder="0"></iframe>
+<iframe src="assets/plot3_zoom.html" width="800" height="450" frameborder="0"></iframe>
 
 **Interesting Aggregates:**
 
@@ -110,11 +110,11 @@ We tested whether the missingness of 'CUSTOMERS.AFFECTED' depends on other colum
 
 **Test 1:** The missingness of 'CUSTOMERS.AFFECTED' *does depend on* 'CAUSE.CATEGORY' (p < 0.001). Intuitively, this makes sense, because certain variants of outages (like intentional griefing/attacks), are far less likely to have customer counts reported or not.
 
-<iframe src="assets/fig_miss1.html" width="800" height="475" frameborder="0"></iframe>
+<iframe src="assets/fig_miss1.html" width="800" height="450" frameborder="0"></iframe>
 
 **Test 2:** The missingness of 'CUSTOMERS.AFFECTED' *does not depend on* 'PC.REALGSP.CHANGE' (p ≈ 0.600). The year-over-year change in a state's GDP has no logical conenction to whether customer counts are reported. 
 
-<iframe src="assets/fig_miss2.html" width="800" height="475" frameborder="0"></iframe>
+<iframe src="assets/fig_miss2.html" width="800" height="450" frameborder="0"></iframe>
 
 ## Hypothesis Testing
 
@@ -128,4 +128,63 @@ We tested whether the missingness of 'CUSTOMERS.AFFECTED' depends on other colum
 
 We performed a permutation test with 10,000 permutations and obtained a p-value of approximately 0.065. At the 0.05 significance level, we *fail to reject the null hypothesis*. While high density areas do appear to have slightyly shorter outage durations, the difference is not statistically significant enough to rule out random chance. 
 
-<iframe src="assets/fig_hyp.html" width="800" height="475" frameborder="0"></iframe>
+<iframe src="assets/fig_hyp.html" width="800" height="450" frameborder="0"></iframe>
+
+## Framing a Prediction Problem
+
+**Prediction Problem:** Predict the duration of a major power outage (in minutes) based on information available at the start of the outage. 
+
+**Type:** Regression 
+
+**Response Variable:** 'OUTAGE.DURATION' - chosen because outage duration directly measures severity and is the most actionable metric for utility companies planning emergency response.
+
+**Evaluation Metric:** RMSE (Root Mean Squared Error) - chosen over MAE because RMSE penalizes large errors more heavily. For outage prediction, being very wrong about a long, severe outage is more costly than small errors on short outage. 
+
+**Time of Prediction:** At the start of an outage, we would know the location (e.g. state, region, population density), the cause category, and the time of year. We would not know 'OUTAGE.RESTORATION', 'CUSTOMERS.AFFECTED', or 'DEMAND.LOSS.MW'. 
+
+## Baseline Model
+
+Our baseline model is a *Decision Tree Regressor* predicting 'OUTAGE.DURATION' using two features: 
+- 'POPDEN_URBAN' (quantitative) - passed through as-is
+- 'CAUSE.CATEGORY' (nominal) - one-hot encoded
+
+Both transformations are implemented in a single sklearn Pipeline. The model achieved a test RMSE of 7418.97 minutes compared to a mean-only baseline of 7838.99 minutes, an improvement of 420.02 minutes. 
+
+This baseline model's test RMSE 7418.97 minutes showed little improvement over the mean-only baseline of 7838.99, suggesting that the population density and cause category do provide a predictive value for outage duration. However, since the error value is still large, relative to the average outage duration, two features alone are not necessarily sufficient in accurately predicting outage duration, leading us to a final model consisting of more features.
+
+## Final Model 
+
+We improved our baseline by adding five new features: 
+- 'CLIMATE.REGION' (nominal, one-hot encoded) - different climate regions experience different types of weather events, directly affecting outage duration
+- 'POPPCT_URBAN' (quantitative, standardized) - captures urbanization beyond raw density, reflecting infrastructure complexity
+- 'MONTH' (quantitative, standardized) - seasonal patterns affect both outage causes and restoration speed
+- 'ANOMALY.LEVEL' (quantitative, standardized) - El Nino/La Nina conditions influence severe weather frequency
+- 'NERC.REGION' (nominal, one-hot encoded) - different electrical reliability regions have different infrastructure and response capabilities 
+
+We switched to a *Random Forest Regressor* and used *GridSearchCV* with 5-fold cross validation to tune hyperparameters. We found that the best parameters were: 
+- *max_depth*: Prevents overfitting using tree depth. Best value: 10
+- *n_estimators*: The number of trees in the forest. Best value: 10
+- *min_samples_split*: Minimum samples required to split a node. Best value: 100
+
+**Results:**
+- Baseline Test RMSE: 7418.97 minutes
+- Final Model Test RMSE: 6888.27 minutes
+- Improvement: 530.70 minutes
+
+## Fairness Analysis
+
+**Group X:** Low Density states | **Group Y:** High Density states
+
+**Evaluation Metric:** RMSE 
+
+**Null Hypothesis:** The model is fair. Its RMSE for high density and low density states is roughly the same, and any difference is due to random chance alone. 
+
+**Alternative Hypothesis:** The model is unfair. Its RMSE for low density states is higher than for high density states. 
+
+**Test Statistic:** RMSE(Low Density) - RMSE(High Density)
+
+**Significance Level:** 0.05
+
+**Result:** With a p-value of 0.35, we fail to reject the null hypothesis. The model's performance difference between high density and low density states is not statistically significant, which suggests that the model is fair across both groups. 
+
+<iframe src="assets/fig_fair.html" width="800" height="450" frameborder="0"></iframe>
