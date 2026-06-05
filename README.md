@@ -1,5 +1,5 @@
 # Power Outages and Population Density
-** By Connor Day**
+**By Connor Day**
 
 ## Introduction
 
@@ -14,9 +14,7 @@ This question matters because the relationship between power outage durations an
 |--------|-------------|
 | `OUTAGE.DURATION` | Duration of outage events (in minutes) |
 | `CUSTOMERS.AFFECTED` | Number of customers affected by the power outage event |
-| `POPDEN_URBAN` | Population density of the urban areas (persons per square mile) |
-| `POPDEN_RURAL` | Population density of the rural areas (persons per square mile) |
-| `POPPCT_URBAN` | Percentage of the total population of the U.S. state represented by the urban population (in %) |
-| `U.S._STATE` | Represents all the states in the continental U.S. |
-| `CAUSE.CATEGORY` | Categories of all the events causing the major power outages |
-| `CLIMATE.REGION` |U.S. Climate regions as specified by National Centers for Environmental Information (nine climatically consistent regions in continental U.S.A.) |
+| `POPDEN_URBAN` | Population density of urban areas (persons per square mile) |
+| `CAUSE.CATEGORY` | Categories of events causing the major power outages |
+| `CLIMATE.REGION` | U.S. Climate regions (nine climatically consistent regions) |
+| `POPPCT_URBAN` | Percentage of state population in urban areas |
