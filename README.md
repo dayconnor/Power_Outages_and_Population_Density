@@ -82,7 +82,36 @@ The distribution of outage durations is heavily right-skewed, with most of the o
 
 Comparing outage durations across density groups, high density states appear to have slightly shorter outage durations, but both groups show a significant spread in their respective outage durations.
 
-<iframe src"assets/plot3_zoom.html" width="800" height-"600" frameborder="0"></iframe>
+<iframe src"assets/plot3_zoom.html" width="800" height="600" frameborder="0"></iframe>
 
 **Interesting Aggregates:**
 
+<pre>
+| CAUSE.CATEGORY                |   High Density |   Low Density |
+|:------------------------------|---------------:|--------------:|
+| equipment failure             |          427.7 |        4672.6 |
+| fuel supply emergency         |        11345   |       18734.4 |
+| intentional attack            |          388   |         483.5 |
+| islanding                     |          194.9 |         215.5 |
+| public appeal                 |         1501.8 |        1436   |
+| severe weather                |         4109.1 |        3724.1 |
+| system operability disruption |          552.7 |        1045.2 |
+</pre>
+
+## Assessment of Missingness
+
+**NMAR Analysis:**
+
+The column 'DEMAND.LOSS.MW' is likely NMAR (Not Missing at Random) because the values in this column represent the amount of peak demand lost during an outage (in units of megawatts), and whether or not that this value gets recorded likely depends on the value itself. Very small outages may not be reported if the demand loss is not significant enough to track. Inversely, extremely large outages may be impossible to make accurate measurements of, due to possible infrastructure damage to power outage monitoring systems. Additional data, such as utility company reporting standards or automated monitoring equipment could potentially explain the missingness, thus making it MAR (Missing at Random). 
+
+**Missingness Dependency:**
+
+We tested whether the missingness of 'CUSTOMERS.AFFECTED' depends on other columns, using permutation tests.
+
+*Test 1:* The missingness of 'CUSTOMERS.AFFECTED' **does depend on** 'CAUSE.CATEGORY' (p < 0.001). Intuitively, this makes sense, because certain variants of outages (like intentional griefing/attacks), are far less likely to have customer counts reported. 
+
+<iframe src="assets/fig_miss1.html" width="800" height="600" frameborder="0"></iframe>
+
+*Test 2:* The missingness of 'CUSTOMERS.AFFECTED' **does not depend on** 'PC.REALGSP.CHANGE' (p ≈ 0.600). The year-over-year change in a state's GDP has no logical conenction to whether customer counts are reported. 
+
+<iframe src="assets/fig_miss2.html" width="800" height="600" frameborder="0"></iframe>
