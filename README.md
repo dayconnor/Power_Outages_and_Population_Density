@@ -67,26 +67,6 @@ This question matters because the relationship between power outage durations an
 
 A preview of the cleaned DataFrame:
 <pre>
-RMSE (Low Density): 8808.16 minutes
-RMSE (High Density): 4980.17 minutes
-Observed difference: 3827.98 minutes
-P-value = 0.37
-Fail to reject null
-
-
-
-
-
-
-
-
-
-
-Best parameters: {'model__max_depth': 10, 'model__min_samples_split': 10, 'model__n_estimators': 100}
-Best CV RMSE: 5274.52 minutes
-Baseline Model Test RMSE: 7418.97 minutes
-Final Model Test RMSE: 6888.27 minutes
-Improvement: 530.70 minutes
 | U.S._STATE   | OUTAGE.START        |   OUTAGE.DURATION | CAUSE.CATEGORY     |   CUSTOMERS.AFFECTED |   POPDEN_URBAN | DENSITY_GROUP   |
 |:-------------|:--------------------|------------------:|:-------------------|---------------------:|---------------:|:----------------|
 | Minnesota    | 2011-07-01 17:00:00 |              3060 | severe weather     |                70000 |           2279 | Low Density     |
