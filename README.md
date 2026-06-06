@@ -90,6 +90,8 @@ Comparing outage durations across density groups, high density states appear to 
 
 **Interesting Aggregates:**
 
+The pivot table shows that power outages caused by equipment failure last significantly longer in low density areas compared to high density areas. This suggests that rural areas may be lacking in resources that high density areas have to help fix outage durations for this category. The pivot table also shows that power outages caused by fuel supply emergencies contribute to the longest durations for both groups.
+
 <pre>
 | CAUSE.CATEGORY                |   High Density |   Low Density |
 |:------------------------------|---------------:|--------------:|
@@ -193,9 +195,9 @@ We switched to a Random Forest Regressor and used GridSearchCV with 5-fold cross
 
 **Evaluation Metric:** RMSE 
 
-**Null Hypothesis:** The model is fair. It's RMSE for high density and low density states is roughly the same, and any difference is due to random chance. 
+**Null Hypothesis:** The model is fair. Its RMSE for high density and low density states is roughly the same, and any difference is due to random chance. 
 
-**Alternative Hypothesis:** The model is unfair. It's RMSE for low density states is higher than for high density states. 
+**Alternative Hypothesis:** The model is unfair. Its RMSE for low density states is higher than for high density states. 
 
 **Test Statistic:** RMSE(Low Density) - RMSE(High Density)
 
