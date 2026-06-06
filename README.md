@@ -1,4 +1,4 @@
-# Power Outages and Population Density
+# Power Outages and Population Density in the United States
 **By Connor Day**
 
 <br>
