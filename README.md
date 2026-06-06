@@ -62,7 +62,7 @@ This question matters because the relationship between power outage durations an
 
 **Cleaning Steps:**
 - Combined 'OUTAGE.START.DATE' and 'OUTAGE.START.TIME' into a single 'OUTAGE.START' timestamp column, doing the same for 'OUTAGE.RESTORATION'. This makes it easier to work with outage times as one single variable, rather than having separate, unnecessary date and time columns. 
-- Dropped the priginal four date and time columns since they became redundant after combining them. 
+- Dropped the original four date and time columns since they became redundant after combining them. 
 - Created a 'DENSITY_GROUP' column by categorizing states into "High Density" and "Low Density" based on the median urban population density (2,380 persons per square mile). This allows a direct comparison between the two groups, which is key for our research question.
 
 A preview of the cleaned DataFrame:
@@ -114,11 +114,11 @@ The column 'DEMAND.LOSS.MW' is likely NMAR (Not Missing at Random) because the v
 
 We tested whether the missingness of 'CUSTOMERS.AFFECTED' depends on other columns, using permutation tests.
 
-**Test 1:** The missingness of 'CUSTOMERS.AFFECTED' *does depend on* 'CAUSE.CATEGORY' (p < 0.001). Intuitively, this makes sense, because certain variants of outages (like intentional griefing/attacks), are far less likely to have customer counts reported or not.
+**Test 1:** The missingness of 'CUSTOMERS.AFFECTED' *does depend on* 'CAUSE.CATEGORY' (p < 0.001). Intuitively, this makes sense, because certain variants of outages (like intentional vandalism/attacks), are far less likely to have customer counts reported or not.
 
 <iframe src="assets/fig_miss1.html" width="800" height="450" frameborder="0"></iframe>
 
-**Test 2:** The missingness of 'CUSTOMERS.AFFECTED' *does not depend on* 'PC.REALGSP.CHANGE' (p ≈ 0.600). The year-over-year change in a state's GDP has no logical conenction to whether customer counts are reported. 
+**Test 2:** The missingness of 'CUSTOMERS.AFFECTED' *does not depend on* 'PC.REALGSP.CHANGE' (p ≈ 0.600). The year-over-year change in a state's GDP has no logical connection to whether customer counts are reported. 
 
 <iframe src="assets/fig_miss2.html" width="800" height="450" frameborder="0"></iframe>
 
@@ -134,7 +134,7 @@ We tested whether the missingness of 'CUSTOMERS.AFFECTED' depends on other colum
 
 **Significance Level:** 0.05
 
-We performed a permutation test with 10,000 permutations and obtained a p-value of approximately 0.065. At the 0.05 significance level, we *fail to reject the null hypothesis*. While high density areas do appear to have slightyly shorter outage durations, the difference is not statistically significant enough to rule out random chance. 
+We performed a permutation test with 10,000 permutations and obtained a p-value of approximately 0.065. At the 0.05 significance level, we *fail to reject the null hypothesis*. While high density areas do appear to have slightly shorter outage durations, the difference is not statistically significant enough to rule out random chance. 
 
 <iframe src="assets/fig_hyp.html" width="800" height="450" frameborder="0"></iframe>
 
@@ -148,7 +148,7 @@ We performed a permutation test with 10,000 permutations and obtained a p-value 
 
 **Response Variable:** 'OUTAGE.DURATION' - chosen because outage duration directly measures severity and is the most actionable metric for utility companies planning emergency response.
 
-**Evaluation Metric:** RMSE (Root Mean Squared Error) - chosen over MAE because RMSE penalizes large errors more heavily. For outage prediction, being very wrong about a long, severe outage is more costly than small errors on short outage. 
+**Evaluation Metric:** RMSE (Root Mean Squared Error) - chosen over MAE (Mean Absolute Error) because RMSE penalizes large errors more heavily. For outage prediction, being very wrong about a long, severe outage is more costly than small errors on short outage. 
 
 **Time of Prediction:** At the start of an outage, we would know the location (e.g. state, region, population density), the cause category, and the time of year. We would not know 'OUTAGE.RESTORATION', 'CUSTOMERS.AFFECTED', or 'DEMAND.LOSS.MW'. 
 
@@ -160,7 +160,7 @@ Our baseline model is a *Decision Tree Regressor* predicting 'OUTAGE.DURATION' u
 - 'POPDEN_URBAN' (quantitative) - passed through as-is
 - 'CAUSE.CATEGORY' (nominal) - one-hot encoded
 
-Both transformations are implemented in a single sklearn Pipeline. The model achieved a test RMSE of 7418.97 minutes compared to a mean-only baseline of 7838.99 minutes, an improvement of 420.02 minutes. 
+The model uses one quantitative feature and one nominal feature, with no ordinal features. Both transformations are implemented in a single sklearn Pipeline. The model achieved a test RMSE of 7418.97 minutes compared to a mean-only baseline of 7838.99 minutes, an improvement of 420.02 minutes. 
 
 This baseline model's test RMSE 7418.97 minutes showed little improvement over the mean-only baseline of 7838.99, suggesting that the population density and cause category do provide a predictive value for outage duration. However, since the error value is still large, relative to the average outage duration, two features alone are not necessarily sufficient in accurately predicting outage duration, leading us to a final model consisting of more features.
 

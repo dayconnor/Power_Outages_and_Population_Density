@@ -4,3 +4,12 @@
 body, h1, h2, h3, h4, h5, h6, p, li, td, th {
   font-family: 'Inter', sans-serif;
 }
+
+a.btn {
+  display: block;
+  width: fit-content;
+  margin: 20px auto 0 auto;
+  float: none;
+  font-size: 0.8em;
+  padding: 5px 15px;
+}
