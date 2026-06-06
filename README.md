@@ -78,7 +78,7 @@ A preview of the cleaned DataFrame:
 
 **Univariate Analysis:**
 
-The distribution of outage durations is heavily right-skewed, with most of the outages lasting under 5,000 minutes, with some extreme outliers exceeding 100,000 minutes. 
+The distribution of outage durations is heavily right-skewed, with most of the outages lasting under 5,000 minutes, with some extreme outliers exceeding 100,000 minutes. These outliers are not shown in the figure below.
 
 <iframe src="assets/plot1.html" width="800" height="450" frameborder="0"></iframe>
 
@@ -108,17 +108,17 @@ Comparing outage durations across density groups, high density states appear to 
 
 **NMAR Analysis:**
 
-The column 'DEMAND.LOSS.MW' is likely NMAR (Not Missing at Random) because the values in this column represent the amount of peak demand lost during an outage (in units of megawatts), and whether or not that this value gets recorded likely depends on the value itself. Very small outages may not be reported if the demand loss is not significant enough to track. Inversely, extremely large outages may be impossible to make accurate measurements of, due to possible infrastructure damage to power outage monitoring systems. Additional data, such as utility company reporting standards or automated monitoring equipment could potentially explain the missingness, thus making it MAR (Missing at Random). 
+The column 'DEMAND.LOSS.MW' is likely NMAR (Not Missing at Random) because the values in this column represent the amount of peak demand lost during an outage (in units of megawatts), and whether or not that this value gets recorded likely depends on the value itself. Very small outages may not be reported if the demand loss is not significant enough to track. Inversely, extremely large outages may be impossible to make accurate measurements of, due to possible infrastructure damage to power outage monitoring systems. Additional data, such as utility company reporting standards or automated monitoring equipment could potentially explain the missingness, potentially classifying it as MAR (Missing at Random). 
 
 **Missingness Dependency:**
 
-We tested whether the missingness of 'CUSTOMERS.AFFECTED' depends on other columns, using permutation tests.
+We tested whether the missingness of 'CUSTOMERS.AFFECTED' depends on other columns using permutation tests.
 
-**Test 1:** The missingness of 'CUSTOMERS.AFFECTED' *does depend on* 'CAUSE.CATEGORY' (p < 0.001). Intuitively, this makes sense, because certain variants of outages (like intentional vandalism/attacks), are far less likely to have customer counts reported or not.
+**Test 1:** The missingness of 'CUSTOMERS.AFFECTED' does depend on 'CAUSE.CATEGORY' (p < 0.001). Intuitively, this makes sense, because certain variants of outages (like intentional vandalism/attacks), are far less likely to have customer counts reported.
 
 <iframe src="assets/fig_miss1.html" width="800" height="450" frameborder="0"></iframe>
 
-**Test 2:** The missingness of 'CUSTOMERS.AFFECTED' *does not depend on* 'PC.REALGSP.CHANGE' (p ≈ 0.600). The year-over-year change in a state's GDP has no logical connection to whether customer counts are reported. 
+**Test 2:** The missingness of 'CUSTOMERS.AFFECTED' does not depend on 'PC.REALGSP.CHANGE' (p ≈ 0.600). The year-over-year change in a state's GDP has no logical connection to whether customer counts are reported. 
 
 <iframe src="assets/fig_miss2.html" width="800" height="450" frameborder="0"></iframe>
 
@@ -134,7 +134,7 @@ We tested whether the missingness of 'CUSTOMERS.AFFECTED' depends on other colum
 
 **Significance Level:** 0.05
 
-We performed a permutation test with 10,000 permutations and obtained a p-value of approximately 0.065. At the 0.05 significance level, we *fail to reject the null hypothesis*. While high density areas do appear to have slightly shorter outage durations, the difference is not statistically significant enough to rule out random chance. 
+We performed a permutation test with 10,000 permutations and obtained a p-value of approximately 0.065. At the 0.05 significance level, we fail to reject the null hypothesis. While high density areas do appear to have slightly shorter outage durations, the difference is not statistically significant enough to rule out random chance. 
 
 <iframe src="assets/fig_hyp.html" width="800" height="450" frameborder="0"></iframe>
 
@@ -144,7 +144,7 @@ We performed a permutation test with 10,000 permutations and obtained a p-value 
 
 **Prediction Problem:** Predict the duration of a major power outage (in minutes) based on information available at the start of the outage. 
 
-**Type:** Regression 
+**Type:** Regression.
 
 **Response Variable:** 'OUTAGE.DURATION' - chosen because outage duration directly measures severity and is the most actionable metric for utility companies planning emergency response.
 
@@ -156,26 +156,26 @@ We performed a permutation test with 10,000 permutations and obtained a p-value 
 
 ## Baseline Model
 
-Our baseline model is a *Decision Tree Regressor* predicting 'OUTAGE.DURATION' using two features: 
-- 'POPDEN_URBAN' (quantitative) - passed through as-is
-- 'CAUSE.CATEGORY' (nominal) - one-hot encoded
+Our baseline model is a Decision Tree Regressor predicting 'OUTAGE.DURATION' using two features: 
+- 'POPDEN_URBAN' - Passed through as-is.
+- 'CAUSE.CATEGORY' - One-hot encoded.
 
-The model uses one quantitative feature and one nominal feature, with no ordinal features. Both transformations are implemented in a single sklearn Pipeline. The model achieved a test RMSE of 7418.97 minutes compared to a mean-only baseline of 7838.99 minutes, an improvement of 420.02 minutes. 
+The model uses one quantitative feature, 'POPDEN_URBAN', and one nominal feature, 'CAUSE.CATEGORY', with no ordinal features. Both transformations are implemented in a single sklearn Pipeline. The model achieved a test RMSE of 7418.97 minutes compared to a mean-only baseline of 7838.99 minutes, an improvement of 420.02 minutes. 
 
-This baseline model's test RMSE 7418.97 minutes showed little improvement over the mean-only baseline of 7838.99, suggesting that the population density and cause category do provide a predictive value for outage duration. However, since the error value is still large, relative to the average outage duration, two features alone are not necessarily sufficient in accurately predicting outage duration, leading us to a final model consisting of more features.
+This baseline model's test RMSE of 7418.97 minutes showed little improvement over the mean-only baseline of 7838.99 minutes, suggesting that the population density and cause category do provide a predictive value for outage duration. However, since the error value is still large, relative to the average outage duration, two features alone are not necessarily sufficient in accurately predicting outage duration, leading us to a final model consisting of more features.
 
 <br>
 
 ## Final Model 
 
 We improved our baseline by adding five new features: 
-- 'CLIMATE.REGION' (nominal, one-hot encoded) - different climate regions experience different types of weather events, directly affecting outage duration
-- 'POPPCT_URBAN' (quantitative, standardized) - captures urbanization beyond raw density, reflecting infrastructure complexity
-- 'MONTH' (quantitative, standardized) - seasonal patterns affect both outage causes and restoration speed
+- 'CLIMATE.REGION' (nominal, one-hot encoded) - Different climate regions experience different types of weather events, directly affecting outage duration
+- 'POPPCT_URBAN' (quantitative, standardized) - Captures urbanization beyond raw density, reflecting infrastructure complexity
+- 'MONTH' (quantitative, standardized) - Seasonal patterns affect both outage causes and restoration speed
 - 'ANOMALY.LEVEL' (quantitative, standardized) - El Nino/La Nina conditions influence severe weather frequency
-- 'NERC.REGION' (nominal, one-hot encoded) - different electrical reliability regions have different infrastructure and response capabilities 
+- 'NERC.REGION' (nominal, one-hot encoded) - Different electrical reliability regions have different infrastructure and response capabilities 
 
-We switched to a *Random Forest Regressor* and used *GridSearchCV* with 5-fold cross validation to tune hyperparameters. We found that the best parameters were: 
+We switched to a Random Forest Regressor and used GridSearchCV with 5-fold cross validation to tune the hyperparameters. We found that the best parameters were: 
 - *max_depth*: Prevents overfitting using tree depth. Best value: 10
 - *n_estimators*: The number of trees in the forest. Best value: 100
 - *min_samples_split*: Minimum samples required to split a node. Best value: 10
@@ -193,9 +193,9 @@ We switched to a *Random Forest Regressor* and used *GridSearchCV* with 5-fold c
 
 **Evaluation Metric:** RMSE 
 
-**Null Hypothesis:** The model is fair. Its RMSE for high density and low density states is roughly the same, and any difference is due to random chance alone. 
+**Null Hypothesis:** The model is fair. It's RMSE for high density and low density states is roughly the same, and any difference is due to random chance. 
 
-**Alternative Hypothesis:** The model is unfair. Its RMSE for low density states is higher than for high density states. 
+**Alternative Hypothesis:** The model is unfair. It's RMSE for low density states is higher than for high density states. 
 
 **Test Statistic:** RMSE(Low Density) - RMSE(High Density)
 
